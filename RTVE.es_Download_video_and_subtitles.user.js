@@ -9,8 +9,6 @@
 // @include      https://www.rtve.es/*
 // ==/UserScript==
 
-main();
-
 // ####### Util: #######
 
 function unicodeFlag(xx) {
@@ -23,8 +21,9 @@ function unicodeFlag(xx) {
 function httpGet(url, cb) {
   const xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function onreadystatechange() { 
-    if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+    if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
       cb(xmlHttp.responseText);
+    }
   };
   xmlHttp.open("GET", url, true);
   xmlHttp.send(null);
@@ -93,21 +92,6 @@ function hideMe() {
   this.parentNode.parentNode.removeChild(this.parentNode); 
 }
 
-function waitForVideoTag() {
-  const div = document.getElementById("userscript_rtve_cuzi_ui");
-  
-  if(div && div.dataset.url != document.location.href) {
-    showUI();
-    return;
-  }
-  
-  if(!document.querySelector("video")) {
-    div.style.opacity = 0.3;
-    return; 
-  }
-  div.style.opacity = 1.0;
-}
-
 function showUI() {
   if(!document.querySelector(".mediaBox.videoBox")) {
     return; 
@@ -150,6 +134,20 @@ function showUI() {
   getSubtitles(div);
 }
 
+function waitForVideoTag() {
+  const div = document.getElementById("userscript_rtve_cuzi_ui");
+  
+  if(div && div.dataset.url !== document.location.href) {
+    showUI();
+    return;
+  }
+  
+  if(!document.querySelector("video")) {
+    div.style.opacity = 0.3;
+    return; 
+  }
+  div.style.opacity = 1.0;
+}
 
 // ####### Main: #######
 
@@ -157,3 +155,5 @@ function main() {
   showUI();
   window.setInterval(function interval() { waitForVideoTag(); }, 2000);
 }
+
+main();
